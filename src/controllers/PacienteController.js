@@ -79,15 +79,21 @@ exports.crearPaciente = (req, res) => {
 exports.eliminarPaciente = (req, res) => {
   const { id } = req.params;
   try {
-    pool.query(sql.deletePacientes(), [id], (err, result) => {
+    pool.query(sql.getPacienteById(), [id], (err, result) => {
       if (err) throw err;
-      if (result) {
-        return res
-          .status(200)
-          .json({ message: "Paciente eliminado satisfatoriamente", result });
+      if (result.length > 0) {
+        pool.query(sql.deletePacientes(), [id], (err, result) => {
+          if (err) throw err;
+          if (result) {
+            return res.status(200).json({
+              message: "Paciente eliminado satisfatoriamente",
+              result,
+            });
+          }
+        });
       } else {
         res.json({
-          message: "el Paciente no se puede eliminar porque no existe",
+          message: "Paciente no existe",
         });
       }
     });

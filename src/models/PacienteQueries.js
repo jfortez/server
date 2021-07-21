@@ -5,14 +5,14 @@ exports.ifPacienteExiste = () => {
   return "SELECT * FROM pacientes WHERE num_documento=?";
 };
 exports.getPacienteById = () => {
-  return "SELECT * FROM pacientes WHERE id_Paciente=?";
+  return "SELECT * FROM pacientes WHERE id=?";
 };
 exports.insertPacientes = () => {
   return "INSERT INTO pacientes SET ?";
 };
 exports.deletePacientes = () => {
-  return "DELETE FROM pacientes WHERE id_Paciente=?";
+  return "DELETE FROM pacientes WHERE id=?";
 };
 exports.updatePacientes = () => {
-  return "UPDATE pacientes SET ? WHERE id_Paciente=?";
+  return "UPDATE pacientes SET ? WHERE id=?";
 };
