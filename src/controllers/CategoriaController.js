@@ -2,12 +2,10 @@ const pool = require("../database");
 const sql = require("../models/CategoriaQueries");
 
 exports.listCategoria = async (req, res) => {
-  await pool.query(sql.getCategoria(), (err, response) => {
-    if (err) throw err;
-    if (response) {
-      res.status(200).json({ response });
-    }
-  });
+  const categorias = await pool.query(sql.getCategoria());
+  if (categorias) {
+    res.status(200).json(categorias);
+  }
 };
 
 exports.getCategoriaById = async (req, res) => {
@@ -15,7 +13,7 @@ exports.getCategoriaById = async (req, res) => {
   await pool.query(sql.getCategoriabyId(), [id], (err, response) => {
     if (err) throw err;
     if (response.length > 0) {
-      res.status(200).json({ response });
+      res.status(200).json(response);
     } else {
       res.status(500).json({ message: "Categoria no existe" });
     }
@@ -41,9 +39,7 @@ exports.eliminarCategoria = async (req, res) => {
       await pool.query(sql.deleteCategoria(), [id], (err, response) => {
         if (err) throw err;
         if (response) {
-          res
-            .status(200)
-            .json({ message: "Categoria Eliminado correctamente" });
+          res.status(200).json({ message: "Categoria Eliminado correctamente" });
         }
       });
     } else {
@@ -59,18 +55,12 @@ exports.actualizarCategoria = async (req, res) => {
   await pool.query(sql.getCategoriabyId(), [id], async (err, response) => {
     if (err) throw err;
     if (response.length > 0) {
-      await pool.query(
-        sql.updateCategoria(),
-        [nuevaCategoria, id],
-        (err, response) => {
-          if (err) throw err;
-          if (response) {
-            res
-              .status(200)
-              .json({ message: "Categoria Actualizada correctamente" });
-          }
+      await pool.query(sql.updateCategoria(), [nuevaCategoria, id], (err, response) => {
+        if (err) throw err;
+        if (response) {
+          res.status(200).json({ message: "Categoria Actualizada correctamente" });
         }
-      );
+      });
     } else {
       res.status(500).json({ message: "Categoria no existe" });
     }

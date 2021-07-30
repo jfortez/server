@@ -7,6 +7,7 @@ exports.listPacientes = async (req, res) => {
     if (result) {
       return res.json(result);
     }
+    res.end();
   });
 };
 exports.listPacientesById = (req, res) => {
@@ -67,9 +68,7 @@ exports.crearPaciente = (req, res) => {
         pool.query(sql.insertPacientes(), [nuevoPaciente], (err, result) => {
           if (err) throw err;
           if (result) {
-            return res
-              .status(200)
-              .json({ message: "Paciente creado exitosamente", code: "e200" });
+            return res.status(200).json({ message: "Paciente creado exitosamente", code: "e200" });
           }
         });
       }
@@ -138,19 +137,15 @@ exports.actualizarPaciente = (req, res) => {
     pool.query(sql.getPacienteById(), [id], (err, result) => {
       if (err) throw err;
       if (result.length > 0) {
-        pool.query(
-          sql.updatePacientes(),
-          [nuevoPaciente, id],
-          (err, result) => {
-            if (err) throw err;
-            if (result) {
-              return res.status(200).json({
-                message: "paciente actualizado correctamente",
-                result,
-              });
-            }
+        pool.query(sql.updatePacientes(), [nuevoPaciente, id], (err, result) => {
+          if (err) throw err;
+          if (result) {
+            return res.status(200).json({
+              message: "paciente actualizado correctamente",
+              result,
+            });
           }
-        );
+        });
       } else {
         return res.json({ message: "paciente no existe" });
       }

@@ -13,7 +13,7 @@ app.use(cors());
 app.use(middleware);
 
 //port
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 //Routes
 app.use("/api", require("./routes/Routes"));

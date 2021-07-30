@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getPersonal,
-  createPersonal,
+  actualizarPersonal,
+  crearPersonal,
+  eliminarPersonal,
+  getPersonalById,
+  listPersonal,
 } = require("../controllers/PersonalController");
 
-router.get("/", getPersonal);
-router.post("/create", createPersonal);
+router.get("/", listPersonal);
+router.get("/:id", getPersonalById);
+router.post("/create", crearPersonal);
+router.delete("/delete/:id", eliminarPersonal);
+router.post("/update/:id", actualizarPersonal);
 
 module.exports = router;
