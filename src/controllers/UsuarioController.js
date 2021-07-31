@@ -38,10 +38,7 @@ exports.login = (req, res) => {
         });
       } else {
         if (result.length > 0) {
-          if (
-            result[0].usuario === usuario &&
-            result[0].contraseña === contraseña
-          ) {
+          if (result[0].usuario === usuario && result[0].contraseña === contraseña) {
             res.json({ message: "username and password are Correct", result });
           }
         } else {
@@ -57,10 +54,10 @@ exports.login = (req, res) => {
 };
 
 exports.crearUsuario = (req, res) => {
-  const { usuario, contraseña, email } = req.body;
-  const fecha_registro = new Date().toLocaleDateString();
+  const { usuario, contraseña, previlegios } = req.body;
+  const fecha_registro = new Date();
   const active = 1;
-  const nuevoUsuario = { usuario, contraseña, email, fecha_registro, active };
+  const nuevoUsuario = { usuario, contraseña, previlegios, fecha_registro, active };
   try {
     pool.query(sql.ifUserExists(), [usuario], (err, result) => {
       if (err) throw err;
@@ -109,12 +106,12 @@ exports.eliminarUsuario = (req, res) => {
 
 exports.actualizarUsuario = (req, res) => {
   const id = req.params.id;
-  const { usuario, contraseña, email, active } = req.body;
-  const fecha_registro = new Date().toLocaleDateString();
+  const { usuario, contraseña, previlegios, active } = req.body;
+  const fecha_registro = new Date();
   const actualizarUsuario = {
     usuario,
     contraseña,
-    email,
+    previlegios,
     fecha_registro,
     active,
   };
@@ -122,16 +119,12 @@ exports.actualizarUsuario = (req, res) => {
     pool.query(sql.getUsuariosById(), [id], (err, result) => {
       if (err) throw err;
       if (result.length > 0) {
-        pool.query(
-          sql.updateUsuario(),
-          [actualizarUsuario, id],
-          (error, results) => {
-            if (error) throw error;
-            if (results) {
-              return res.json({ message: "se ha actualizado el usuario" });
-            }
+        pool.query(sql.updateUsuario(), [actualizarUsuario, id], (error, results) => {
+          if (error) throw error;
+          if (results) {
+            return res.json({ message: "se ha actualizado el usuario" });
           }
-        );
+        });
       } else {
         return res.json({
           message: "no existe el usuario para poder actualizar",

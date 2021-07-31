@@ -30,34 +30,28 @@ exports.crearPaciente = (req, res) => {
   const {
     nombres,
     apellidos,
+    cedula,
     telefono,
     direccion,
     ciudad,
-    tipo_doc,
-    num_documento,
-    fecha_nac,
+    fecha_nacimiento,
     edad,
-    estadoCivil,
     genero,
-    email,
   } = req.body;
   const nuevoPaciente = {
     nombres,
     apellidos,
+    cedula,
     telefono,
     direccion,
     ciudad,
-    tipo_doc,
-    num_documento,
-    fecha_nac,
+    fecha_nacimiento,
     edad,
-    estadoCivil,
     genero,
     fecha_registro,
-    email,
   };
   try {
-    pool.query(sql.ifPacienteExiste(), [num_documento], (err, result) => {
+    pool.query(sql.ifPacienteExiste(), [cedula], (err, result) => {
       if (err) throw err;
       if (result.length > 0) {
         res.json({
@@ -107,31 +101,25 @@ exports.actualizarPaciente = (req, res) => {
   const {
     nombres,
     apellidos,
+    cedula,
     telefono,
     direccion,
     ciudad,
-    tipo_doc,
-    num_documento,
-    fecha_nac,
+    fecha_nacimiento,
     edad,
-    estadoCivil,
     genero,
-    email,
   } = req.body;
   const nuevoPaciente = {
     nombres,
     apellidos,
+    cedula,
     telefono,
     direccion,
     ciudad,
-    tipo_doc,
-    num_documento,
-    fecha_nac,
+    fecha_nacimiento,
     edad,
-    estadoCivil,
     genero,
     fecha_registro,
-    email,
   };
   try {
     pool.query(sql.getPacienteById(), [id], (err, result) => {

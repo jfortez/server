@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
-  // getUsuario,
+  getUsuario,
   crearUsuario,
   eliminarUsuario,
   getUsuarioById,
@@ -9,8 +9,8 @@ const {
 } = require("../controllers/UsuarioController");
 const { authorize, authorized, signin } = require("../auth/auth");
 
-// router.get("/", getUsuario);
-router.get("/", authorized);
+router.get("/", getUsuario);
+// router.get("/", authorized);
 router.post("/signin", signin);
 router.get("/verifyToken", authorize);
 router.get("/user/:id", getUsuarioById);

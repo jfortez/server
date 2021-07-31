@@ -25,19 +25,20 @@ exports.getClienteById = async (req, res) => {
 exports.crearCliente = async (req, res) => {
   const fecha_registro = new Date();
   const active = 1;
-  const { tipo_documento, num_documento, nombres, apellidos, email, telefono } = req.body;
+  const { ruc, nombres, apellidos, email, telefono, direccion, ciudad } = req.body;
   const nuevoCliente = {
-    tipo_documento,
-    num_documento,
+    ruc,
     nombres,
     apellidos,
     email,
     telefono,
+    direccion,
+    ciudad,
     fecha_registro,
     active,
   };
   // Verificar si el cliente existe y proceder crear el cliente
-  await pool.query(sql.ifClientExists(), [num_documento], async (err, response) => {
+  await pool.query(sql.ifClientExists(), [ruc], async (err, response) => {
     if (err) throw err;
     //SI el cliente existe
     if (response.length > 0) {
@@ -80,14 +81,15 @@ exports.eliminarCliente = async (req, res) => {
 exports.actualizarCliente = async (req, res) => {
   const { id } = req.params;
   const fecha_registro = new Date();
-  const { tipo_documento, num_documento, nombres, apellidos, email, telefono, active } = req.body;
+  const { ruc, nombres, apellidos, email, telefono, direccion, ciudad, active } = req.body;
   const nuevoCliente = {
-    tipo_documento,
-    num_documento,
+    ruc,
     nombres,
     apellidos,
     email,
     telefono,
+    direccion,
+    ciudad,
     fecha_registro,
     active,
   };
@@ -96,7 +98,7 @@ exports.actualizarCliente = async (req, res) => {
     if (err) throw err;
     if (response.length > 0) {
       // Verificar que el numero de documento no sea el mismo de
-      await pool.query(sql.ifClientExists(), [num_documento], async (err, response) => {
+      await pool.query(sql.ifClientExists(), [ruc], async (err, response) => {
         if (err) throw err;
         if (response.length > 0) {
           //Existe un cliente con el mismo num de documento

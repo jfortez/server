@@ -2,7 +2,7 @@ exports.getPacientes = () => {
   return "SELECT * FROM pacientes";
 };
 exports.ifPacienteExiste = () => {
-  return "SELECT * FROM pacientes WHERE num_documento=?";
+  return "SELECT * FROM pacientes WHERE cedula=?";
 };
 exports.getPacienteById = () => {
   return "SELECT * FROM pacientes WHERE id=?";

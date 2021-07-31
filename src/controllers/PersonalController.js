@@ -23,7 +23,7 @@ exports.getPersonalById = async (req, res) => {
 };
 
 exports.crearPersonal = async (req, res) => {
-  const fecha_registro = new Date().toLocaleDateString();
+  const fecha_registro = new Date();
   const active = 1;
   const {
     nombres,
@@ -85,7 +85,7 @@ exports.eliminarPersonal = async (req, res) => {
 
 exports.actualizarPersonal = async (req, res) => {
   const { id } = req.params;
-  const fecha_registro = new Date().toLocaleDateString();
+  const fecha_registro = new Date();
   const {
     nombres,
     apellidos,

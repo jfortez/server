@@ -2,7 +2,7 @@ exports.getClientes = () => {
   return "select * from clientes";
 };
 exports.ifClientExists = () => {
-  return "SELECT * FROM clientes WHERE num_documento=?";
+  return "SELECT * FROM clientes WHERE ruc=?";
 };
 exports.getClienteId = () => {
   return "SELECT * FROM clientes WHERE id=?";

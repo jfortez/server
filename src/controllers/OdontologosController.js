@@ -23,7 +23,7 @@ exports.getOdontologoById = async (req, res) => {
 };
 
 exports.crearOdontologo = async (req, res) => {
-  const fecha_registro = new Date().toLocaleDateString();
+  const fecha_registro = new Date()
   const active = 1;
   const {
     nombres,
@@ -83,7 +83,7 @@ exports.eliminarOdontologo = async (req, res) => {
 
 exports.actualizarOdontologo = async (req, res) => {
   const { id } = req.params;
-  const fecha_registro = new Date().toLocaleDateString();
+  const fecha_registro = new Date()
   const {
     nombres,
     apellidos,
