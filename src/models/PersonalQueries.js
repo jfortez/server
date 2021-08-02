@@ -25,9 +25,6 @@ exports.updateIdUsuario = () => {
 exports.verifyIfUserAlreadyExists = () => {
   return "SELECT u.usuario, u.previlegios, u.active, p.nombres, p.apellidos, p.cedula FROM usuarios u, personal p WHERE u.id=p.id_Usuario AND p.cedula= ?";
 };
-exports.pruebaPersona = () => {
-  return "SELECT * FROM personal p, personas pc WHERE p.id = pc.id_Personal";
-};
 exports.verificarEnTablaPersonas = () => {
   return "SELECT * FROM personas WHERE cedula=?";
 };

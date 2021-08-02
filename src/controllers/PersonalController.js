@@ -166,6 +166,7 @@ exports.pruebaActualizar = async (req, res) => {
     fecha_nacimiento,
     email,
     id_Cargo,
+    active,
     id_Usuario,
   } = req.body;
   let updatePersonal = {
@@ -178,6 +179,7 @@ exports.pruebaActualizar = async (req, res) => {
     fecha_nacimiento,
     email,
     id_Cargo,
+    active,
     id_Usuario,
   };
   if (telefono === undefined) {
@@ -194,6 +196,9 @@ exports.pruebaActualizar = async (req, res) => {
   }
   if (id_Cargo === undefined) {
     delete updatePersonal.id_Cargo;
+  }
+  if (active === undefined) {
+    delete updatePersonal.active;
   }
   //primero verificamos que exista el Id en la tabla Personas
   const persona = await pool.query(sql.verificarById(), [id]);
