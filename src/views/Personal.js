@@ -12,6 +12,7 @@ const {
   pruebaCrear,
   pruebaActualizar,
   pruebaEliminar,
+  pruebaById,
 } = require("../controllers/PersonalController");
 
 router.get("/", listPersonal);
@@ -21,6 +22,7 @@ router.post("/by/cedula", getPersonalByCedula);
 router.post("/create", crearPersonal);
 router.post("/setUser", setUser);
 router.post("/prueba", pruebaCrear);
+router.get("/prueba/:id", pruebaById);
 router.post("/pruebaactualizar/:id", pruebaActualizar);
 router.delete("/pruebaEliminar/:id", pruebaEliminar);
 router.delete("/delete/:id", eliminarPersonal);

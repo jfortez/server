@@ -79,7 +79,15 @@ exports.setUser = async (req, res) => {
     }
   });
 };
-
+exports.pruebaById = async (req, res) => {
+  const { id } = req.params;
+  const data = await pool.query(sql.verificarById(), [id]);
+  if (data.length > 0) {
+    res.status(200).json(data);
+  } else {
+    res.status(400).json({ message: "El Personal no existe " });
+  }
+};
 exports.pruebaCrear = async (req, res) => {
   const fecha_registro = new Date();
   const active = 1;
