@@ -25,3 +25,21 @@ exports.updateIdUsuario = () => {
 exports.verifyIfUserAlreadyExists = () => {
   return "SELECT u.usuario, u.previlegios, u.active, p.nombres, p.apellidos, p.cedula FROM usuarios u, personal p WHERE u.id=p.id_Usuario AND p.cedula= ?";
 };
+exports.pruebaPersona = () => {
+  return "SELECT * FROM personal p, personas pc WHERE p.id = pc.id_Personal";
+};
+exports.verificarEnTablaPersonas = () => {
+  return "SELECT * FROM personas WHERE cedula=?";
+};
+exports.almacenarDatos = () => {
+  return "INSERT INTO personas SET ?";
+};
+exports.verificarById = () => {
+  return "SELECT * FROM personal p, personas pc WHERE p.id = pc.id_Personal AND p.id=?";
+};
+exports.newUpdate = () => {
+  return "UPDATE personal p , personas pc SET  ? WHERE p.id = pc.id_Personal AND p.id=?";
+};
+exports.deletePersona = () => {
+  return "DELETE FROM personas WHERE id_Personal=?";
+};
