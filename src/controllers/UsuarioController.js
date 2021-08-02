@@ -82,21 +82,11 @@ exports.crearUsuario = (req, res) => {
 
 exports.eliminarUsuario = (req, res) => {
   const id = req.params.id;
-  const { usuario } = req.body;
   try {
-    pool.query(sql.ifUserExists(), [usuario], (err, result) => {
-      if (err) throw err;
-      if (result.length > 0) {
-        pool.query(sql.deleteUsuario(), [id], (error, results) => {
-          if (error) throw error;
-          if (results) {
-            return res.json({ message: "se ha eliminado el usuario" });
-          }
-        });
-      } else {
-        res.json({
-          message: "el usuario no se puede eliminar porque no existe",
-        });
+    pool.query(sql.deleteUsuario(), [id], (error, results) => {
+      if (error) throw error;
+      if (results) {
+        return res.json({ message: "se ha eliminado el usuario" });
       }
     });
   } catch (error) {

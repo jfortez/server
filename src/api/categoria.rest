@@ -1,7 +1,6 @@
-POST http://192.168.0.104:5000/api/categorias/create HTTP/1.1
+POST http://192.168.0.104:5000/api/personal/by/cedula HTTP/1.1
 Content-type: application/json
 
 {
-    "nombre": "Servicios",
-    "descripcion": "Descripcion"
+    "cedula": "123213"
 }

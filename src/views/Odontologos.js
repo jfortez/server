@@ -6,9 +6,11 @@ const {
   eliminarOdontologo,
   getOdontologoById,
   listOdontologo,
+  getOdontologoByCedula,
 } = require("../controllers/OdontologosController");
 
 router.get("/", listOdontologo);
+router.post("/by/cedula", getOdontologoByCedula);
 router.get("/:id", getOdontologoById);
 router.post("/create", crearOdontologo);
 router.delete("/delete/:id", eliminarOdontologo);

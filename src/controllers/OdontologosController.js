@@ -22,8 +22,19 @@ exports.getOdontologoById = async (req, res) => {
   });
 };
 
+exports.getOdontologoByCedula = async (req, res) => {
+  const { cedula } = req.body;
+  await pool.query(sql.ifOdontologoExists(), [cedula], (err, response) => {
+    if (err) throw err;
+    if (response.length > 0) {
+      res.status(200).json(response);
+    } else {
+      res.status(400).json({ message: "el item no existe" });
+    }
+  });
+};
 exports.crearOdontologo = async (req, res) => {
-  const fecha_registro = new Date()
+  const fecha_registro = new Date();
   const active = 1;
   const {
     nombres,
@@ -83,7 +94,7 @@ exports.eliminarOdontologo = async (req, res) => {
 
 exports.actualizarOdontologo = async (req, res) => {
   const { id } = req.params;
-  const fecha_registro = new Date()
+  const fecha_registro = new Date();
   const {
     nombres,
     apellidos,
