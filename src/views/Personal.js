@@ -1,31 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const {
-  actualizarPersonal,
-  crearPersonal,
-  eliminarPersonal,
+  // actualizarPersonal,
+  // crearPersonal,
+  // eliminarPersonal,
+  // listPersonal,
+  // getPersonalByCedula,
+  // listPersonalCedula,
+  getPersonal,
   getPersonalById,
-  listPersonal,
-  getPersonalByCedula,
-  listPersonalCedula,
-  setUser,
   pruebaCrear,
   pruebaActualizar,
   pruebaEliminar,
-  pruebaById,
+  setUser,
 } = require("../controllers/PersonalController");
 
-router.get("/", listPersonal);
-router.get("/cedula", listPersonalCedula);
+// router.get("/", listPersonal);
+// router.get("/cedula", listPersonalCedula);
+// router.post("/by/cedula", getPersonalByCedula);
+// router.delete("/delete/:id", eliminarPersonal);
+// router.post("/update/:id", actualizarPersonal);
+// router.post("/create", crearPersonal);
+router.get("/", getPersonal);
 router.get("/:id", getPersonalById);
-router.post("/by/cedula", getPersonalByCedula);
-router.post("/create", crearPersonal);
 router.post("/setUser", setUser);
-router.post("/prueba", pruebaCrear);
-router.get("/prueba/:id", pruebaById);
-router.post("/pruebaactualizar/:id", pruebaActualizar);
-router.delete("/pruebaEliminar/:id", pruebaEliminar);
-router.delete("/delete/:id", eliminarPersonal);
-router.post("/update/:id", actualizarPersonal);
+router.post("/create", pruebaCrear);
+router.post("/update/:id", pruebaActualizar);
+router.delete("/delete/:id", pruebaEliminar);
 
 module.exports = router;

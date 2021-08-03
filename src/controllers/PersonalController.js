@@ -2,84 +2,14 @@ const pool = require("../database");
 const sql = require("../models/PersonalQueries");
 const externalSql = require("../models/UsuarioQueries");
 
-exports.listPersonal = async (req, res) => {
-  await pool.query(sql.getPersonal(), (err, response) => {
-    if (err) throw err;
-    if (response) {
-      res.status(200).json(response);
-    }
-  });
+exports.getPersonal = async (req, res) => {
+  const list = await pool.query(sql.listPersonal());
+  if (list.length > 0) {
+    res.status(200).json(list);
+  }
 };
 
-exports.listPersonalCedula = async (req, res) => {
-  await pool.query(sql.getPersonalCedula(), (err, response) => {
-    if (err) throw err;
-    if (response) {
-      res.status(200).json(response);
-    }
-  });
-};
 exports.getPersonalById = async (req, res) => {
-  const { id } = req.params;
-  await pool.query(sql.getPersonalById(), [id], (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      res.status(200).json(response);
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
-};
-exports.getPersonalByCedula = async (req, res) => {
-  const { cedula } = req.body;
-  await pool.query(sql.ifPersonalExists(), [cedula], (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      res.status(200).json(response);
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
-};
-exports.setUser = async (req, res) => {
-  const fecha_registro = new Date();
-  const active = 1;
-  const { usuario, contraseña, previlegios, cedula } = req.body;
-  const nuevoUsuario = { usuario, contraseña, previlegios, fecha_registro, active };
-  //Verificamos si hay un personal registrado bajo el numero de cedula
-  await pool.query(sql.ifPersonalExists(), [cedula], async (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      //verificamos si existen usuarios que  ya se encuentra registrado bajo el  numero de cedula
-      await pool.query(sql.verifyIfUserAlreadyExists(), [cedula], async (err, response) => {
-        if (err) throw err;
-        if (response.length > 0) {
-          res.status(400).json({ message: "Ya existe usuario para la persona" });
-        } else {
-          await pool.query(externalSql.inserUsuario(), [nuevoUsuario], async (err, response) => {
-            if (err) throw err;
-            if (response) {
-              const id_Usr = response.insertId;
-              await pool.query(sql.updateIdUsuario(), [id_Usr, cedula], (err, response) => {
-                if (err) throw err;
-                if (response) {
-                  res.status(200).json({ message: "Usuario añadido correctamente" });
-                } else {
-                  res.status(400).json({ message: "hubo un error al añadir el usuario " });
-                }
-              });
-            } else {
-              res.status(400).json({ message: "error 1 " });
-            }
-          });
-        }
-      });
-    } else {
-      res.status(400).json({ message: "El Personal no existe " });
-    }
-  });
-};
-exports.pruebaById = async (req, res) => {
   const { id } = req.params;
   const data = await pool.query(sql.verificarById(), [id]);
   if (data.length > 0) {
@@ -88,6 +18,44 @@ exports.pruebaById = async (req, res) => {
     res.status(400).json({ message: "El Personal no existe " });
   }
 };
+
+exports.setUser = async (req, res) => {
+  const fecha_registro = new Date();
+  const active = 1;
+  const { usuario, contraseña, previlegios, cedula } = req.body;
+  const nuevoUsuario = { usuario, contraseña, previlegios, fecha_registro, active };
+  //verificamos que exista una cedula de manera global
+  const userExiste = await pool.query(externalSql.ifUserExists(), [usuario]);
+  if (userExiste.length > 0) {
+    return res.status(400).json({ message: "El usuario es duplicado, ya existe" });
+  }
+
+  const cedulaExiste = await pool.query(sql.verificarEnTablaPersonas(), [cedula]);
+  if (cedulaExiste.length > 0) {
+    //verificamos si existen usuarios que  ya se encuentra registrado bajo el  numero de cedula
+    const verifyIfUserInUse = await pool.query(sql.verifyIfUserAlreadyExists(), [cedula]);
+    if (verifyIfUserInUse.length > 0) {
+      res.status(400).json({ message: "Ya existe usuario para la persona" });
+    } else {
+      //si no existe un usuario en uso, procedemos a crear usuario para crear usuario
+      const usuario = await pool.query(externalSql.inserUsuario(), [nuevoUsuario]);
+      if (usuario) {
+        //almacenamos el ultimo id del usuario creado
+        const id_Usr = usuario.insertId;
+        //procedemos a modificar la table y añadir el ultimo usuario creado para la tabla personal
+        const usuarioAñadido = await pool.query(sql.newUpdateIdUsuario(), [id_Usr, cedula]);
+        if (usuarioAñadido) {
+          res.status(200).json({ message: "Usuario añadido correctamente" });
+        } else {
+          res.status(400).json({ message: "hubo un error al añadir el usuario " });
+        }
+      }
+    }
+  } else {
+    res.status(400).json({ message: "No existe un dato bajo la Cedula ingresada " });
+  }
+};
+
 exports.pruebaCrear = async (req, res) => {
   const fecha_registro = new Date();
   const active = 1;
@@ -230,109 +198,4 @@ exports.pruebaEliminar = async (req, res) => {
   } else {
     res.status(400).json({ message: "el item no existe" });
   }
-};
-exports.crearPersonal = async (req, res) => {
-  const fecha_registro = new Date();
-  const active = 1;
-  const {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    id_Cargo,
-    id_Usuario,
-  } = req.body;
-  const nuevoPersonal = {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    id_Cargo,
-    fecha_registro,
-    active,
-    id_Usuario,
-  };
-  await pool.query(sql.ifPersonalExists(), [cedula], async (err, response) => {
-    if (err) throw err;
-    if (response.lenght > 0) {
-      res.status(400).json({ message: "el item ya existe, no se puede duplicar" });
-    } else {
-      await pool.query(sql.insertPersonal(), [nuevoPersonal], (err, response) => {
-        if (err) throw err;
-        if (response) {
-          res.status(200).json({ message: "item creado correctamente" });
-        }
-      });
-    }
-  });
-};
-
-exports.eliminarPersonal = async (req, res) => {
-  const { id } = req.params;
-  await pool.query(sql.getPersonalById(), [id], async (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      await pool.query(sql.deletePersonal(), [id], (err, response) => {
-        if (err) throw err;
-        if (response) {
-          res.status(200).json({ message: "item Eliminado correctamente" });
-        }
-      });
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
-};
-
-exports.actualizarPersonal = async (req, res) => {
-  const { id } = req.params;
-  const fecha_registro = new Date();
-  const {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    id_Cargo,
-    active,
-    id_Usuario,
-  } = req.body;
-  const nuevoPersonal = {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    id_Cargo,
-    fecha_registro,
-    active,
-    id_Usuario,
-  };
-  await pool.query(sql.getPersonalById(), [id], async (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      await pool.query(sql.updatePersonal(), [nuevoPersonal, id], (err, response) => {
-        if (err) throw err;
-        if (response) {
-          res.status(200).json({ message: "item Actualizado correctamente" });
-        }
-      });
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
 };

@@ -1,141 +1,15 @@
 const pool = require("../database");
 const sql = require("../models/OdontologoQueries");
+const externalSql = require("../models/UsuarioQueries");
 
-exports.listOdontologo = async (req, res) => {
-  await pool.query(sql.getOdontologos(), (err, response) => {
-    if (err) throw err;
-    if (response) {
-      res.status(200).json(response);
-    }
-  });
+exports.getOdontologo = async (req, res) => {
+  const list = await pool.query(sql.getOdontologos());
+  if (list.length > 0) {
+    res.status(200).json(list);
+  }
 };
 
 exports.getOdontologoById = async (req, res) => {
-  const { id } = req.params;
-  await pool.query(sql.getOdontologosById(), [id], (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      res.status(200).json(response);
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
-};
-
-exports.getOdontologoByCedula = async (req, res) => {
-  const { cedula } = req.body;
-  await pool.query(sql.ifOdontologoExists(), [cedula], (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      res.status(200).json(response);
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
-};
-exports.crearOdontologo = async (req, res) => {
-  const fecha_registro = new Date();
-  const active = 1;
-  const {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    id_Usuario,
-  } = req.body;
-  const nuevoOdontologo = {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    fecha_registro,
-    active,
-    id_Usuario,
-  };
-  await pool.query(sql.ifOdontologoExists(), [cedula], async (err, response) => {
-    if (err) throw err;
-    if (response.lenght > 0) {
-      res.status(400).json({ message: "el item ya existe, no se puede duplicar" });
-    } else {
-      await pool.query(sql.insertOdontologos(), [nuevoOdontologo], (err, response) => {
-        if (err) throw err;
-        if (response) {
-          res.status(200).json({ message: "item creado correctamente" });
-        }
-      });
-    }
-  });
-};
-
-exports.eliminarOdontologo = async (req, res) => {
-  const { id } = req.params;
-  await pool.query(sql.getOdontologosById(), [id], async (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      await pool.query(sql.deleteOdontologos(), [id], (err, response) => {
-        if (err) throw err;
-        if (response) {
-          res.status(200).json({ message: "item Eliminado correctamente" });
-        }
-      });
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
-};
-
-exports.actualizarOdontologo = async (req, res) => {
-  const { id } = req.params;
-  const fecha_registro = new Date();
-  const {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    active,
-    id_Usuario,
-  } = req.body;
-  const nuevoOdontologo = {
-    nombres,
-    apellidos,
-    cedula,
-    telefono,
-    direccion,
-    ciudad,
-    fecha_nacimiento,
-    email,
-    fecha_registro,
-    active,
-    id_Usuario,
-  };
-  await pool.query(sql.getOdontologosById(), [id], async (err, response) => {
-    if (err) throw err;
-    if (response.length > 0) {
-      await pool.query(sql.updateOdontologos(), [nuevoOdontologo, id], (err, response) => {
-        if (err) throw err;
-        if (response) {
-          res.status(200).json({ message: "item Actualizado correctamente" });
-        }
-      });
-    } else {
-      res.status(400).json({ message: "el item no existe" });
-    }
-  });
-};
-
-exports.pruebaById = async (req, res) => {
   const { id } = req.params;
   const data = await pool.query(sql.verificarById(), [id]);
   if (data.length > 0) {
@@ -144,7 +18,43 @@ exports.pruebaById = async (req, res) => {
     res.status(400).json({ message: "El Personal no existe " });
   }
 };
-exports.pruebaCrear = async (req, res) => {
+exports.setUser = async (req, res) => {
+  const fecha_registro = new Date();
+  const active = 1;
+  const { usuario, contraseña, previlegios, cedula } = req.body;
+  const nuevoUsuario = { usuario, contraseña, previlegios, fecha_registro, active };
+  //verificamos que exista una cedula de manera global
+  const userExiste = await pool.query(externalSql.ifUserExists(), [usuario]);
+  if (userExiste.length > 0) {
+    return res.status(400).json({ message: "El usuario es duplicado, ya existe" });
+  }
+
+  const cedulaExiste = await pool.query(sql.verificarEnTablaPersonas(), [cedula]);
+  if (cedulaExiste.length > 0) {
+    //verificamos si existen usuarios que  ya se encuentra registrado bajo el  numero de cedula
+    const verifyIfUserInUse = await pool.query(sql.verifyIfUserAlreadyExists(), [cedula]);
+    if (verifyIfUserInUse.length > 0) {
+      res.status(400).json({ message: "Ya existe usuario para la persona" });
+    } else {
+      //si no existe un usuario en uso, procedemos a crear usuario para crear usuario
+      const usuario = await pool.query(externalSql.inserUsuario(), [nuevoUsuario]);
+      if (usuario) {
+        //almacenamos el ultimo id del usuario creado
+        const id_Usr = usuario.insertId;
+        //procedemos a modificar la table y añadir el ultimo usuario creado para la tabla personal
+        const usuarioAñadido = await pool.query(sql.newUpdateIdUsuario(), [id_Usr, cedula]);
+        if (usuarioAñadido) {
+          res.status(200).json({ message: "Usuario añadido correctamente" });
+        } else {
+          res.status(400).json({ message: "hubo un error al añadir el usuario " });
+        }
+      }
+    }
+  } else {
+    res.status(400).json({ message: "No existe un dato bajo la Cedula ingresada " });
+  }
+};
+exports.createOdontologo = async (req, res) => {
   const fecha_registro = new Date();
   const active = 1;
   const {
@@ -175,7 +85,7 @@ exports.pruebaCrear = async (req, res) => {
   //prmero identificar si ya existe el numero de cedula de forma global en la tabla PERSONAS
   const ifCedulaExists = await pool.query(sql.verificarEnTablaPersonas(), [cedula]);
   if (ifCedulaExists.length > 0) {
-    res.json({ message: "cedula ya existe" });
+    res.status(400).json({ message: "cedula ya existe" });
   } else {
     //en caso de que no existe cedula de manera global, se procede a crear una fila a la tabla PERSONAL
     const nuevoOdontologo = {
@@ -208,7 +118,7 @@ exports.pruebaCrear = async (req, res) => {
   }
 };
 
-exports.pruebaActualizar = async (req, res) => {
+exports.updateOdolontogo = async (req, res) => {
   const { id } = req.params;
   const {
     cedula,
@@ -262,7 +172,7 @@ exports.pruebaActualizar = async (req, res) => {
   }
 };
 
-exports.pruebaEliminar = async (req, res) => {
+exports.deleteOdolontogo = async (req, res) => {
   const { id } = req.params;
   //verificar si existe el id
   const verify = await pool.query(sql.verificarById(), [id]);

@@ -1,5 +1,5 @@
 exports.getOdontologos = () => {
-  return "select * from odontologos";
+  return "SELECT * FROM odontologos o, personas pc WHERE o.id = pc.id_Odontologo";
 };
 exports.getOdontologosById = () => {
   return "SELECT * FROM odontologos WHERE id=?";
@@ -30,4 +30,10 @@ exports.newUpdate = () => {
 };
 exports.deletePersona = () => {
   return "DELETE FROM personas WHERE id_Odontologo=?";
+};
+exports.verifyIfUserAlreadyExists = () => {
+  return "SELECT * FROM usuarios u, personas p, odontologos o WHERE p.id_Personal=o.id AND o.id_Usuario=u.id AND p.cedula=?";
+};
+exports.newUpdateIdUsuario = () => {
+  return "UPDATE odontologos p , personas pc SET  id_Usuario=?  WHERE p.id = pc.id_Odontologo AND pc.cedula=?";
 };
