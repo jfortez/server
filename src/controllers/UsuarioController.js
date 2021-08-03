@@ -1,3 +1,4 @@
+const e = require("express");
 const pool = require("../database");
 const sql = require("../models/UsuarioQueries");
 
@@ -14,6 +15,26 @@ exports.getUsuario = (req, res) => {
   }
 };
 
+exports.getPersInUse = async (req, res) => {
+  const users = await pool.query(sql.getPerUsersInUse());
+  if (users.length > 0) {
+    res.status(200).json(users);
+  }
+};
+exports.getOdInUse = async (req, res) => {
+  const users = await pool.query(sql.getOdUsersInUse());
+  if (users.length > 0) {
+    res.status(200).json(users);
+  }
+};
+
+exports.getAllUsersInUse = async (req, res) => {
+  const usersP = await pool.query(sql.getPerUsersInUse());
+  const usersO = await pool.query(sql.getOdUsersInUse());
+  if (usersP && usersO) {
+    res.status(200).json({ personal: usersP, odontologos: usersO });
+  }
+};
 exports.getUsuarioById = (req, res) => {
   const id = req.params.id;
   try {
@@ -80,17 +101,24 @@ exports.crearUsuario = (req, res) => {
   }
 };
 
-exports.eliminarUsuario = (req, res) => {
-  const id = req.params.id;
-  try {
-    pool.query(sql.deleteUsuario(), [id], (error, results) => {
-      if (error) throw error;
-      if (results) {
-        return res.json({ message: "se ha eliminado el usuario" });
-      }
-    });
-  } catch (error) {
-    return res.json(error);
+exports.eliminarOdUsuario = async (req, res) => {
+  const { id } = req.params;
+  const setUserTo0 = await pool.query(sql.setOdontologoUserToNull(), [id]);
+  if (setUserTo0) {
+    const deleteUser = await pool.query(sql.deleteUsuario(), [id]);
+    if (deleteUser) {
+      return res.json({ message: "se ha eliminado el usuario" });
+    }
+  }
+};
+exports.eliminarPerUsuario = async (req, res) => {
+  const { id } = req.params;
+  const setUserTo0 = await pool.query(sql.setPersonalUserToNull(), [id]);
+  if (setUserTo0) {
+    const deleteUser = await pool.query(sql.deleteUsuario(), [id]);
+    if (deleteUser) {
+      return res.json({ message: "se ha eliminado el usuario" });
+    }
   }
 };
 
