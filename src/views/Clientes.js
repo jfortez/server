@@ -6,10 +6,12 @@ const {
   eliminarCliente,
   getClienteById,
   listCliente,
+  getClienteByRUC,
 } = require("../controllers/ClienteController");
 
 router.get("/", listCliente);
 router.get("/:id", getClienteById);
+router.post("/ruc", getClienteByRUC);
 router.post("/create", crearCliente);
 router.delete("/delete/:id", eliminarCliente);
 router.post("/update/:id", actualizarCliente);

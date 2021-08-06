@@ -7,6 +7,7 @@ exports.getPersonal = async (req, res) => {
   if (list.length > 0) {
     res.status(200).json(list);
   }
+  res.end();
 };
 
 exports.getPersonalById = async (req, res) => {
@@ -17,6 +18,7 @@ exports.getPersonalById = async (req, res) => {
   } else {
     res.status(400).json({ message: "El Personal no existe " });
   }
+  res.end();
 };
 
 exports.setUser = async (req, res) => {

@@ -7,6 +7,7 @@ exports.getOdontologo = async (req, res) => {
   if (list.length > 0) {
     res.status(200).json(list);
   }
+  res.end();
 };
 
 exports.getOdontologoById = async (req, res) => {

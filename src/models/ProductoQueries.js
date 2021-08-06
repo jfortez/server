@@ -7,6 +7,9 @@ exports.getProductos2 = () => {
 exports.getProductoById = () => {
   return "SELECT * FROM productos WHERE id=?";
 };
+exports.getProductoByCod = () => {
+  return "SELECT * FROM productos WHERE cod_producto=?";
+};
 exports.insertProductos = () => {
   return "INSERT INTO productos SET ?";
 };

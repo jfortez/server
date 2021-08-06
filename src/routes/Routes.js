@@ -12,5 +12,6 @@ routes.use("/odontologos", require("../views/Odontologos"));
 routes.use("/cargo", require("../views/Cargo"));
 routes.use("/empresa", require("../views/Empresa"));
 routes.use("/personas", require("../views/Personas"));
+routes.use("/configuraciones", require("../views/Configuraciones"));
 
 module.exports = routes;

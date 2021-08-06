@@ -22,6 +22,18 @@ exports.getProductoById = async (req, res) => {
   });
 };
 
+exports.getProductoByCod = async (req, res) => {
+  const { cod_producto } = req.body;
+  await pool.query(sql.getProductoByCod(), [cod_producto], (err, response) => {
+    if (err) throw err;
+    if (response.length > 0) {
+      res.status(200).json(response);
+    } else {
+      res.json({ message: "Producto no existe" });
+    }
+  });
+};
+
 exports.crearProducto = async (req, res) => {
   const active = 1;
   const { cod_producto, nombre, descripcion, cantidad, costo, precio, id_categoria } = req.body;

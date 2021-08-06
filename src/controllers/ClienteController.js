@@ -22,6 +22,18 @@ exports.getClienteById = async (req, res) => {
   });
 };
 
+exports.getClienteByRUC = async (req, res) => {
+  const { ruc } = req.body;
+  await pool.query(sql.ifClientExists(), [ruc], (err, response) => {
+    if (err) throw err;
+    if (response.length > 0) {
+      res.status(200).json(response);
+    } else {
+      res.json({ message: "Cliente no existe" });
+    }
+  });
+};
+
 exports.crearCliente = async (req, res) => {
   const fecha_registro = new Date();
   const active = 1;
