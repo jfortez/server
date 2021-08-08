@@ -22,6 +22,14 @@ exports.getProductoById = async (req, res) => {
   });
 };
 
+exports.test = async (req, res) => {
+  const { vDetalle } = req.body;
+  const updateCant = await pool.query(sql.updateCantidad(), [vDetalle]);
+  if (updateCant) {
+    res.status(200).json({ message: "Datos Actualizados" });
+  }
+};
+
 exports.getProductoByCod = async (req, res) => {
   const { cod_producto } = req.body;
   await pool.query(sql.getProductoByCod(), [cod_producto], (err, response) => {

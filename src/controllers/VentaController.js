@@ -37,7 +37,8 @@ exports.crearVenta = async (req, res) => {
   await pool.query(sql.insertVentas(), [nuevaVenta], (err, response) => {
     if (err) throw err;
     if (response) {
-      res.status(200).json({ message: "Venta añadido correctamente" });
+      const id = response.insertId;
+      res.status(200).json(id);
     }
   });
 };

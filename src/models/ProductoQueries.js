@@ -19,3 +19,6 @@ exports.deleteProductos = () => {
 exports.updateProductos = () => {
   return "UPDATE productos SET ? WHERE id=?";
 };
+exports.updateCantidad = () => {
+  return "INSERT INTO productos (id, cantidad) VALUES  ? AS updtcant ON DUPLICATE KEY UPDATE cantidad=updtcant.cantidad";
+};
