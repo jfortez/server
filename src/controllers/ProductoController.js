@@ -84,7 +84,7 @@ exports.actualizarProducto = async (req, res) => {
   const { id } = req.params;
   const { cod_producto, nombre, descripcion, cantidad, costo, precio, id_categoria, active } =
     req.body;
-  const nuevoProducto = {
+  let nuevoProducto = {
     cod_producto,
     nombre,
     descripcion,
@@ -94,6 +94,9 @@ exports.actualizarProducto = async (req, res) => {
     id_categoria,
     active,
   };
+  if (active === undefined) {
+    delete nuevoProducto.active;
+  }
   await pool.query(sql.getProductoById(), [id], async (err, response) => {
     if (err) throw err;
     if (response.length > 0) {

@@ -10,13 +10,21 @@ exports.getOdontologo = async (req, res) => {
   res.end();
 };
 
+exports.getOdontologoByCedula = async (req, res) => {
+  const { cedula } = req.body;
+  const odByCed = await pool.query(sql.getOdontologoByCed(), [cedula]);
+  if (odByCed.length > 0) {
+    return res.status(200).json(odByCed);
+  } else {
+    return res.json({ message: "no existe Odontologo" });
+  }
+};
+
 exports.getOdontologoById = async (req, res) => {
   const { id } = req.params;
   const data = await pool.query(sql.verificarById(), [id]);
   if (data.length > 0) {
     res.status(200).json(data);
-  } else {
-    res.status(400).json({ message: "El Personal no existe " });
   }
 };
 exports.setUser = async (req, res) => {

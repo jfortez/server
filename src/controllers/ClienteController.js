@@ -92,9 +92,8 @@ exports.eliminarCliente = async (req, res) => {
 
 exports.actualizarCliente = async (req, res) => {
   const { id } = req.params;
-  const fecha_registro = new Date();
   const { ruc, nombres, apellidos, email, telefono, direccion, ciudad, active } = req.body;
-  const nuevoCliente = {
+  let nuevoCliente = {
     ruc,
     nombres,
     apellidos,
@@ -102,9 +101,11 @@ exports.actualizarCliente = async (req, res) => {
     telefono,
     direccion,
     ciudad,
-    fecha_registro,
     active,
   };
+  if (active === undefined) {
+    delete nuevoCliente.active;
+  }
   // verificar que el id exista
   await pool.query(sql.getClienteId(), [id], async (err, response) => {
     if (err) throw err;

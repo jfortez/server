@@ -28,5 +28,4 @@ exports.newUpdateIdUsuario = () => {
 exports.deletePersona = () => {
   return "DELETE FROM personas WHERE id_Personal=?";
 };
-
 //UPDATE  usuarios u, odontologos o SET id_Usuario=NULL WHERE u.id=o.id_Usuario

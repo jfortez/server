@@ -25,8 +25,17 @@ exports.listPacientesById = (req, res) => {
     console.log(error);
   }
 };
+exports.listPacietnesByCedula = async (req, res) => {
+  const { cedula } = req.body;
+  const paciente = await pool.query(sql.ifPacienteExiste(), [cedula]);
+  if (paciente.length > 0) {
+    return res.status(200).json(paciente);
+  } else {
+    return res.json({ message: "no existe paciente" });
+  }
+};
 exports.crearPaciente = (req, res) => {
-  const fecha_registro = new Date().toLocaleDateString();
+  const fecha_registro = new Date();
   const {
     nombres,
     apellidos,
@@ -97,7 +106,6 @@ exports.eliminarPaciente = (req, res) => {
 
 exports.actualizarPaciente = (req, res) => {
   const { id } = req.params;
-  const fecha_registro = new Date().toLocaleDateString();
   const {
     nombres,
     apellidos,
@@ -119,7 +127,6 @@ exports.actualizarPaciente = (req, res) => {
     fecha_nacimiento,
     edad,
     genero,
-    fecha_registro,
   };
   try {
     pool.query(sql.getPacienteById(), [id], (err, result) => {

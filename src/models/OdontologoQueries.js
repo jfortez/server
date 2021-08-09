@@ -37,3 +37,6 @@ exports.verifyIfUserAlreadyExists = () => {
 exports.newUpdateIdUsuario = () => {
   return "UPDATE odontologos p , personas pc SET  id_Usuario=?  WHERE p.id = pc.id_Odontologo AND pc.cedula=?";
 };
+exports.getOdontologoByCed = () => {
+  return "SELECT * FROM personas p, odontologos o WHERE p.id_Odontologo=o.id AND p.cedula=?";
+};

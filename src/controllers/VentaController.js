@@ -87,3 +87,20 @@ exports.actualizarVenta = async (req, res) => {
     }
   });
 };
+// ----_Reporte de Ventas
+
+exports.listReporteVentas = async (req, res) => {
+  const reporteVentas = await pool.query(sql.getReporteVentas());
+  if (reporteVentas.length > 0) {
+    res.status(200).json(reporteVentas);
+  }
+  res.end();
+};
+exports.listReporteDetalleVentas = async (req, res) => {
+  const { id } = req.params;
+  const reporteDetVenta = await pool.query(sql.getreporteDetalleVentas(), [id]);
+  if (reporteDetVenta.length > 0) {
+    res.status(200).json(reporteDetVenta);
+  }
+  res.end();
+};
