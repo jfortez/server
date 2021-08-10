@@ -24,13 +24,16 @@ exports.getVentaById = async (req, res) => {
 
 exports.crearVenta = async (req, res) => {
   const fecha = new Date();
-  const { num_venta, cantidad, subtotal, total, id_Cliente, id_Usuario } = req.body;
+  const { num_venta, cantidad, subtotal, total, importe, devolucion, id_Cliente, id_Usuario } =
+    req.body;
   const nuevaVenta = {
     num_venta,
     fecha,
     cantidad,
     subtotal,
     total,
+    importe,
+    devolucion,
     id_Cliente,
     id_Usuario,
   };
@@ -63,13 +66,16 @@ exports.eliminarVenta = async (req, res) => {
 exports.actualizarVenta = async (req, res) => {
   const { id } = req.params;
   const fecha = new Date();
-  const { num_venta, cantidad, subtotal, total, id_Cliente, id_Usuario } = req.body;
+  const { num_venta, cantidad, subtotal, total, importe, devolucion, id_Cliente, id_Usuario } =
+    req.body;
   const nuevaVenta = {
     num_venta,
     fecha,
     cantidad,
     subtotal,
     total,
+    importe,
+    devolucion,
     id_Cliente,
     id_Usuario,
   };

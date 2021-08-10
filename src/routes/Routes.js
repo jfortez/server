@@ -14,5 +14,16 @@ routes.use("/cargo", require("../views/Cargo"));
 routes.use("/empresa", require("../views/Empresa"));
 routes.use("/personas", require("../views/Personas"));
 routes.use("/configuraciones", require("../views/Configuraciones"));
+routes.use("/proveedores", require("../views/Proveedores"));
+routes.use("/compras", require("../views/Compras"));
+routes.use("/comprasdetalle", require("../views/DetalleCompras"));
+routes.use("/caja", require("../views/Caja"));
+routes.use("/cajamovimientos", require("../views/MovimientoCaja"));
+routes.use("/agenda", require("../views/Agenda"));
+routes.use("/cita", require("../views/Cita"));
+routes.use("/receta", require("../views/Receta"));
+routes.use("/servicios", require("../views/Servicios"));
+routes.use("/ventaservicios", require("../views/Venta_Servicio"));
+routes.use("/facturacionservicios", require("../views/Facturacion_Servicio"));
 
 module.exports = routes;
