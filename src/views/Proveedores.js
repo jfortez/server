@@ -6,9 +6,11 @@ const {
   createProveedor,
   eliminarProveedor,
   updateProveedor,
+  listProveedoresById,
 } = require("../controllers/ProveedoresController");
 
 router.get("/", listProveedores);
+router.get("/:id", listProveedoresById);
 router.post("/create", createProveedor);
 router.post("/update/:id", updateProveedor);
 router.post("/bajaProveedor/:id", bajaProveedor);
