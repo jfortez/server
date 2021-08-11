@@ -12,6 +12,16 @@ exports.listProveedoresById = async (req, res) => {
   if (proveedores.length > 0) res.status(200).json(proveedores);
   res.end();
 };
+exports.listProveedoresByRUC = async (req, res) => {
+  const { ruc } = req.body;
+  const proveedores = await pool.query(sql.getProveedoresByRUCandActive(), [ruc]);
+  if (proveedores.length > 0) {
+    res.status(200).json(proveedores);
+  } else {
+    res.json({ message: "no existen datos" });
+  }
+  res.end();
+};
 exports.createProveedor = async (req, res) => {
   const fecha_registro = new Date();
   const active = 1;

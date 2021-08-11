@@ -22,3 +22,9 @@ exports.updateProductos = () => {
 exports.updateCantidad = () => {
   return "INSERT INTO productos (id, cantidad) VALUES  ? AS updtcant ON DUPLICATE KEY UPDATE cantidad=updtcant.cantidad";
 };
+exports.updateByCompras = () => {
+  return "INSERT INTO productos (id,costo,precio, cantidad) VALUES  ? AS updtcompra ON DUPLICATE KEY UPDATE costo=updtcompra.costo, precio=updtcompra.precio, cantidad=updtcompra.cantidad";
+};
+exports.multipleInsertProductos = () => {
+  return "INSERT INTO productos (cod_producto,nombre,descripcion,cantidad,costo,precio,id_categoria,active) VALUES ?";
+};

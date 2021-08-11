@@ -9,8 +9,8 @@ exports.listDetalleCompras = async (req, res) => {
   res.end();
 };
 exports.crearDetalleCompras = async (req, res) => {
-  const { compraDetalle } = req.body;
-  const detalleCompra = await pool.query(sql.insertDetalleCompras(), [compraDetalle]);
+  const { dtlleCompra } = req.body;
+  const detalleCompra = await pool.query(sql.insertDetalleCompras(), [dtlleCompra]);
   if (detalleCompra) {
     return res.status(200).json({ message: "se ha añadido los datos correctamente" });
   }

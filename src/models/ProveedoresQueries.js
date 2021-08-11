@@ -7,6 +7,9 @@ exports.getProveedoresById = () => {
 exports.getProveedoresByRUC = () => {
   return "SELECT * from proveedores WHERE ruc=?";
 };
+exports.getProveedoresByRUCandActive = () => {
+  return "SELECT * from proveedores WHERE active=1 AND ruc=?";
+};
 exports.insertProveedor = () => {
   return "INSERT INTO proveedores SET ?";
 };

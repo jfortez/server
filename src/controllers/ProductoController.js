@@ -8,6 +8,7 @@ exports.listProducto = async (req, res) => {
       res.status(200).json(response);
     }
   });
+  res.send();
 };
 
 exports.getProductoById = async (req, res) => {
@@ -27,6 +28,22 @@ exports.test = async (req, res) => {
   const updateCant = await pool.query(sql.updateCantidad(), [vDetalle]);
   if (updateCant) {
     res.status(200).json({ message: "Datos Actualizados" });
+  }
+};
+
+exports.updateByCompras = async (req, res) => {
+  const { existente } = req.body;
+  const updateValues = await pool.query(sql.updateByCompras(), [existente]);
+  if (updateValues) {
+    res.status(200).json({ message: "Datos Actualizados" });
+  }
+};
+
+exports.multipleCreate = async (req, res) => {
+  const { nuevoProducto } = req.body;
+  const multiplesProductos = await pool.query(sql.multipleInsertProductos(), [nuevoProducto]);
+  if (multiplesProductos) {
+    res.status(200).json({ message: "Detalle Venta añadido correctamente" });
   }
 };
 
