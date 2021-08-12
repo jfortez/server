@@ -1,5 +1,14 @@
 exports.getServicios = () => {
-  return "SELECT * from servicios";
+  return "SELECT * from servicios WHERE active=1";
+};
+exports.getServiciosByCod = () => {
+  return "SELECT * from servicios WHERE cod_servicio=?";
+};
+exports.getServiciosByCodAndActive = () => {
+  return "SELECT * from servicios WHERE active=1 AND cod_servicio=?";
+};
+exports.getServiciosById = () => {
+  return "SELECT * from servicios WHERE active=1 and id=?";
 };
 exports.insertServicios = () => {
   return "INSERT INTO servicios SET ?";

@@ -63,7 +63,7 @@ exports.updateProveedor = async (req, res) => {
   };
   const proveedor = await pool.query(sql.updateProveedor(), [update, id]);
   if (proveedor) {
-    return res.status(200).json({ message: "se ha actualizado los datos correctamente" });
+    res.status(200).json({ message: "se ha actualizado los datos correctamente" });
   }
   res.end();
 };
@@ -72,7 +72,7 @@ exports.eliminarProveedor = async (req, res) => {
   const { id } = req.params;
   const proveedor = await pool.query(sql.deleteProveedor(), [id]);
   if (proveedor) {
-    return res.status(200).json({ message: "se ha eliminado los datos correctamente" });
+    res.status(200).json({ message: "se ha eliminado los datos correctamente" });
   }
   res.end();
 };
@@ -80,7 +80,7 @@ exports.bajaProveedor = async (req, res) => {
   const { id } = req.params;
   const proveedor = await pool.query(sql.downProveedor(), [id]);
   if (proveedor) {
-    return res.status(200).json({ message: "se dió de baja los datos correctamente" });
+    res.status(200).json({ message: "se dió de baja los datos correctamente" });
   }
   res.end();
 };

@@ -20,6 +20,7 @@ routes.use("/comprasdetalle", require("../views/DetalleCompras"));
 routes.use("/caja", require("../views/Caja"));
 routes.use("/cajamovimientos", require("../views/MovimientoCaja"));
 routes.use("/agenda", require("../views/Agenda"));
+routes.use("/colaagenda", require("../views/ColaAgenda"));
 routes.use("/cita", require("../views/Cita"));
 routes.use("/receta", require("../views/Receta"));
 routes.use("/servicios", require("../views/Servicios"));

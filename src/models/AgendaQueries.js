@@ -1,6 +1,9 @@
 exports.getAgenda = () => {
   return "SELECT * from agenda";
 };
+exports.getColaAgenda = () => {
+  return "SELECT * FROM cola_agenda WHERE estado='PENDIENTE' ";
+};
 exports.insertAgenda = () => {
   return "INSERT INTO agenda SET ?";
 };
