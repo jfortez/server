@@ -7,8 +7,20 @@ exports.getUsuariosById = () => {
 exports.loginUser = () => {
   return `SELECT * from usuarios WHERE usuario=? and contraseña=?`;
 };
+exports.loginUserPersonal = () => {
+  return "SELECT * FROM usuarios u, personas p, personal pc WHERE pc.id=p.id_Personal AND u.id=pc.id_Usuario AND u.usuario=? and u.contraseña=?";
+};
+exports.loginUserOdontologo = () => {
+  return "SELECT * FROM usuarios u, personas p, odontologos pc WHERE pc.id=p.id_Odontologo AND u.id=pc.id_Usuario AND u.usuario=? and u.contraseña=?";
+};
 exports.viewUsername = () => {
   return "SELECT * from usuarios where usuario=?";
+};
+exports.viewUsernameByPersonal = () => {
+  return "SELECT * FROM usuarios u, personas p, personal pc WHERE pc.id=p.id_Personal AND u.id=pc.id_Usuario AND u.usuario=?";
+};
+exports.viewUsernameByOdontologo = () => {
+  return "SELECT * FROM usuarios u, personas p, odontologos pc WHERE pc.id=p.id_Odontologo AND u.id=pc.id_Usuario AND u.usuario=?";
 };
 exports.ifUserExists = () => {
   return `SELECT * FROM usuarios WHERE usuario=?`;

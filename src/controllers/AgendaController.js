@@ -2,7 +2,23 @@ const pool = require("../database");
 const sql = require("../models/AgendaQueries");
 
 exports.listAgenda = async (req, res) => {
-  const agenda = await pool.query(sql.getAgenda());
+  const agenda = await pool.query(sql.getAgendawDetalles());
+  if (agenda) {
+    res.status(200).json(agenda);
+  }
+  res.end();
+};
+exports.listAgendaByOdontologo = async (req, res) => {
+  const { id } = req.params;
+  const agenda = await pool.query(sql.getAgendawDetallesByOdontologo(), [id]);
+  if (agenda) {
+    res.status(200).json(agenda);
+  }
+  res.end();
+};
+exports.listAgendaByID = async (req, res) => {
+  const { id } = req.params;
+  const agenda = await pool.query(sql.getAgendawDetallesById(), [id]);
   if (agenda) {
     res.status(200).json(agenda);
   }
@@ -33,14 +49,14 @@ exports.createAgenda = async (req, res) => {
     id_Servicio,
     active,
   };
-  const cola_agenda = await pool.query(sql.getColaAgenda());
+  const cola_agenda = await pool.query(sql.getColaAgenda(), [id_Odontologo]);
+  const hora = nuevo.hora_agenda + ":00";
   for (const key in cola_agenda) {
-    console.log(
-      "Base de datos: ",
-      new Date(cola_agenda[key].fechainicio_cola).toLocaleDateString()
-    );
+    const fecha = new Date(cola_agenda[key].fechainicio_cola).toISOString().split("T")[0];
+    if (fecha === nuevo.fechainicio_agenda && cola_agenda[key].horainicio_cola === hora) {
+      return res.json({ message: "Agenda Duplicado" });
+    }
   }
-  console.log("Datos de Entrada", nuevo.fechainicio_agenda);
   const agenda = await pool.query(sql.insertAgenda(), [nuevo]);
   const id = agenda.insertId;
   if (agenda) {
@@ -84,6 +100,15 @@ exports.deleteAgenda = async (req, res) => {
   const agenda = await pool.query(sql.deleteAgenda(), [id]);
   if (agenda) {
     res.status(200).json({ message: "se ha eliminado los datos correctamente" });
+  }
+  res.end();
+};
+exports.estadoAgenda = async (req, res) => {
+  const { id } = req.params;
+  const { estadoAgenda, colaAgenda } = req.body;
+  const agenda = await pool.query(sql.modificarEstadoAgenda(), [estadoAgenda, colaAgenda, id]);
+  if (agenda) {
+    res.status(200).json({ message: "se ha anulado la agenda" });
   }
   res.end();
 };

@@ -4,7 +4,7 @@ const sql = require("../models/RecetaQueries");
 exports.listReceta = async (req, res) => {
   const receta = await pool.query(sql.getReceta());
   if (receta) {
-    return res.status(200).json(receta);
+    res.status(200).json(receta);
   }
   res.end();
 };
@@ -14,7 +14,7 @@ exports.creatReceta = async (req, res) => {
   const nuevo = { nombre, descripcion, active };
   const receta = await pool.query(sql.insertReceta(), [nuevo]);
   if (receta) {
-    return res.status(200).active({ message: "se ha ingresado los datos correctamente" });
+    res.status(200).json({ message: "se ha ingresado los datos correctamente" });
   } else {
     res.status(400).json({ message: "hubo un error al ingresar los datos" });
   }
@@ -26,7 +26,7 @@ exports.updateReceta = async (req, res) => {
   const update = { nombre, descripcion };
   const receta = await pool.query(sql.updateReceta(), [update, id]);
   if (receta) {
-    return res.status(200).json({ message: "Receta Actualizada correctamente" });
+    res.status(200).json({ message: "Receta Actualizada correctamente" });
   }
   res.end();
 };
@@ -34,7 +34,7 @@ exports.bajaReceta = async (req, res) => {
   const { id } = req.params;
   const receta = await pool.query(sql.downReceta(), [update, id]);
   if (receta) {
-    return res.status(200).active({ message: "se dió de baja los datos correctamente" });
+    res.status(200).json({ message: "se dió de baja los datos correctamente" });
   }
   res.end();
 };

@@ -1,4 +1,3 @@
-const e = require("express");
 const pool = require("../database");
 const sql = require("../models/UsuarioQueries");
 

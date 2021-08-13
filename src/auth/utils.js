@@ -7,6 +7,8 @@ function generateToken(user) {
 
   var u = {
     id: user.id,
+    id_persona: user.id_persona,
+    role: user.role,
     usuario: user.usuario,
     email: user.email,
     fecha_registro: user.fecha_registro,
@@ -24,6 +26,8 @@ function getCleanUser(user) {
 
   return {
     id: user.id,
+    id_persona: user.id_persona,
+    role: user.role,
     usuario: user.usuario,
     email: user.email,
     fecha_registro: user.fecha_registro,
