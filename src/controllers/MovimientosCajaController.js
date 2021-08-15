@@ -4,7 +4,7 @@ const sql = require("../models/MovimientosCajaQueries");
 exports.listMovimientosCaja = async (req, res) => {
   const movimientos_caja = await pool.query(sql.getMovimientosCaja());
   if (movimientos_caja.length > 0) {
-    return res.status(200).json(movimientos_caja);
+    res.status(200).json(movimientos_caja);
   }
   res.end();
 };
@@ -36,7 +36,7 @@ exports.addMovimientosCaja = async (req, res) => {
   }
   const movimientos_caja = await pool.query(sql.createMovimientosCaja(), [nuevo]);
   if (movimientos_caja) {
-    return res.status(200).active({ message: "se ha ingresado los datos correctamente" });
+    res.status(200).json({ message: "se ha ingresado los datos correctamente" });
   } else {
     res.status(400).json({ message: "hubo un error al ingresar los datos" });
   }
@@ -55,7 +55,7 @@ exports.updateMovimientoCaja = async (req, res) => {
   }
   const movimientos_caja = await pool.query(sql.updateMovimientoCaja(), [update, id]);
   if (movimientos_caja) {
-    return res.status(200).json({ message: "Movimientos Actualizada correctamente" });
+    res.status(200).json({ message: "Movimientos Actualizada correctamente" });
   }
   res.end();
 };

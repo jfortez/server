@@ -22,10 +22,9 @@ exports.createVentaServicio = async (req, res) => {
     id_Usuario,
   };
   const venta_servicio = await pool.query(sql.insertVentaServicios(), [nuevo]);
-  const id = venta_servicio.insertId;
-  console.log(id);
   if (venta_servicio) {
-    res.status(200).json({ message: "oki" });
+    const idVentaSer = venta_servicio.insertId;
+    res.status(200).json(idVentaSer);
   } else {
     res.status(400).json({ message: "hubo un error al ingresar los datos" });
   }

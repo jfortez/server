@@ -10,10 +10,14 @@ exports.listFacturacionServicios = async (req, res) => {
 };
 
 exports.crearFacturacionServicios = async (req, res) => {
-  const { facturacionServicio } = req.body;
-  const facturacionServicioNuevo = await pool.query(sql.insertDetalleVenta(), [
-    facturacionServicio,
-  ]);
+  const { id_venta_servicios, id_Servicio, precio, total } = req.body;
+  const nuevo = {
+    id_venta_servicios,
+    id_Servicio,
+    precio,
+    total,
+  };
+  const facturacionServicioNuevo = await pool.query(sql.insertFacturacionServ(), [nuevo]);
   if (facturacionServicioNuevo) {
     return res.status(200).json({ message: "se ha añadido los datos correctamente" });
   }

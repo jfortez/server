@@ -4,3 +4,6 @@ exports.getDetalleVenta = () => {
 exports.insertDetalleVenta = () => {
   return "INSERT INTO facturacion_servicio (id_venta_servicios, id_Servicio, precio, total) VALUES ?";
 };
+exports.insertFacturacionServ = () => {
+  return "INSERT INTO facturacion_servicio SET ?";
+};
