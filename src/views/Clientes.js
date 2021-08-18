@@ -4,6 +4,7 @@ const {
   actualizarCliente,
   crearCliente,
   eliminarCliente,
+  bajaCliente,
   getClienteById,
   listCliente,
   getClienteByRUC,
@@ -13,6 +14,7 @@ router.get("/", listCliente);
 router.get("/:id", getClienteById);
 router.post("/ruc", getClienteByRUC);
 router.post("/create", crearCliente);
+router.post("/baja/:id", bajaCliente);
 router.delete("/delete/:id", eliminarCliente);
 router.post("/update/:id", actualizarCliente);
 

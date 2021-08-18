@@ -33,7 +33,14 @@ exports.getClienteByRUC = async (req, res) => {
     }
   });
 };
-
+exports.bajaCliente = async (req, res) => {
+  const { id } = req.params;
+  const baja = await pool.query(sql.bajaCliente(), [id]);
+  if (baja) {
+    res.status(200).json({ message: "cliente dado de baja" });
+  }
+  res.end();
+};
 exports.crearCliente = async (req, res) => {
   const fecha_registro = new Date();
   const active = 1;
@@ -54,18 +61,17 @@ exports.crearCliente = async (req, res) => {
     if (err) throw err;
     //SI el cliente existe
     if (response.length > 0) {
-      res.status(500).json({ message: "Cliente ya se encuentra registrado" });
-    } else {
-      //cliente no existe
-      await pool.query(sql.insertClientes(), [nuevoCliente], (err, response) => {
-        if (err) throw err;
-        if (response) {
-          res.status(200).json({ message: "Cliente creado exitosamente" });
-        } else {
-          res.status(500).json({ message: "hubo un error al crear el cliente" });
-        }
-      });
+      return res.json({ message: "el ruc ya existe", response });
     }
+    //cliente no existe
+    await pool.query(sql.insertClientes(), [nuevoCliente], (err, response) => {
+      if (err) throw err;
+      if (response) {
+        res.status(200).json({ message: "Cliente creado exitosamente" });
+      } else {
+        res.status(500).json({ message: "hubo un error al crear el cliente" });
+      }
+    });
   });
 };
 
@@ -92,7 +98,8 @@ exports.eliminarCliente = async (req, res) => {
 
 exports.actualizarCliente = async (req, res) => {
   const { id } = req.params;
-  const { ruc, nombres, apellidos, email, telefono, direccion, ciudad, active } = req.body;
+  const active = 1;
+  const { ruc, nombres, apellidos, email, telefono, direccion, ciudad } = req.body;
   let nuevoCliente = {
     ruc,
     nombres,
@@ -110,31 +117,17 @@ exports.actualizarCliente = async (req, res) => {
   await pool.query(sql.getClienteId(), [id], async (err, response) => {
     if (err) throw err;
     if (response.length > 0) {
-      // Verificar que el numero de documento no sea el mismo de
-      await pool.query(sql.ifClientExists(), [ruc], async (err, response) => {
+      //proceder a actualizar el cliente
+      await pool.query(sql.updateCliente(), [nuevoCliente, id], (err, response) => {
         if (err) throw err;
-        if (response.length > 0) {
-          //Existe un cliente con el mismo num de documento
-          res.status(500).json({
-            message: "El Numero de documento que se desea actualizar ya existe en la base de datos",
-          });
+        if (response) {
+          res.status(200).json({ message: "se actualizó el cliente exitosamente" });
         } else {
-          //no existe un cliente repetido, se puede proseguir
-          //proceder a actualizar el cliente
-          await pool.query(sql.updateCliente(), [nuevoCliente, id], (err, response) => {
-            if (err) throw err;
-            if (response) {
-              res.status(200).json({ message: "se actualizó el cliente exitosamente" });
-            } else {
-              res.status(500).json({
-                message: "hubo un a error al actualizar el cliente",
-              });
-            }
+          res.status(500).json({
+            message: "hubo un a error al actualizar el cliente",
           });
         }
       });
-    } else {
-      res.status(500).json({ message: "el Cliente no existe" });
     }
   });
 };

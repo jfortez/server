@@ -1,8 +1,11 @@
 exports.getClientes = () => {
-  return "select * from clientes";
+  return "select * from clientes where active=1";
 };
 exports.ifClientExists = () => {
   return "SELECT * FROM clientes WHERE ruc=?";
+};
+exports.bajaCliente = () => {
+  return "UPDATE clientes SET active=0 WHERE clientes.id=?";
 };
 exports.getClienteId = () => {
   return "SELECT * FROM clientes WHERE id=?";
