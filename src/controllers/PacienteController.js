@@ -36,6 +36,7 @@ exports.listPacietnesByCedula = async (req, res) => {
 };
 exports.crearPaciente = (req, res) => {
   const fecha_registro = new Date();
+  const active = 1;
   const {
     nombres,
     apellidos,
@@ -58,25 +59,35 @@ exports.crearPaciente = (req, res) => {
     edad,
     genero,
     fecha_registro,
+    active,
   };
   try {
     pool.query(sql.ifPacienteExiste(), [cedula], (err, result) => {
       if (err) throw err;
       if (result.length > 0) {
-        res.json({
-          message: "El paciente ya se encuentra registrado",
-          code: "e500",
-        });
-      } else {
-        pool.query(sql.insertPacientes(), [nuevoPaciente], (err, result) => {
-          if (err) throw err;
-          if (result) {
-            return res.status(200).json({ message: "Paciente creado exitosamente", code: "e200" });
-          }
+        return res.json({
+          message: "dato ya existe",
+          result,
         });
       }
+      pool.query(sql.insertPacientes(), [nuevoPaciente], (err, result) => {
+        if (err) throw err;
+        if (result) {
+          return res.status(200).json({ message: "Paciente creado exitosamente" });
+        }
+      });
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.bajaPacientes = async (req, res) => {
+  const { id } = req.params;
+  const paciente = await pool.query(sql.bajaPaciente(), [id]);
+  if (paciente) {
+    res.status(200).json({ message: "se dió de baja los datos correctamente" });
+  }
+  res.end();
 };
 exports.eliminarPaciente = (req, res) => {
   const { id } = req.params;
@@ -106,6 +117,7 @@ exports.eliminarPaciente = (req, res) => {
 
 exports.actualizarPaciente = (req, res) => {
   const { id } = req.params;
+  const active = 1;
   const {
     nombres,
     apellidos,
@@ -127,6 +139,7 @@ exports.actualizarPaciente = (req, res) => {
     fecha_nacimiento,
     edad,
     genero,
+    active,
   };
   try {
     pool.query(sql.getPacienteById(), [id], (err, result) => {
@@ -137,7 +150,6 @@ exports.actualizarPaciente = (req, res) => {
           if (result) {
             return res.status(200).json({
               message: "paciente actualizado correctamente",
-              result,
             });
           }
         });
