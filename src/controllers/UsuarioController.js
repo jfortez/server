@@ -13,12 +13,35 @@ exports.getUsuario = (req, res) => {
     console.log(error);
   }
 };
-
+exports.getUsusuarioById = async (req, res) => {
+  const { id } = req.params;
+  const usuarios = await pool.query(sql.getUsuariosById(), [id]);
+  if (usuarios.length > 0) {
+    res.status(200).json(usuarios);
+  }
+  res.end();
+};
 exports.getPersInUse = async (req, res) => {
   const users = await pool.query(sql.getPerUsersInUse());
   if (users.length > 0) {
     res.status(200).json(users);
   }
+};
+exports.bajaUsuarios = async (req, res) => {
+  const { id } = req.params;
+  const usuario = await pool.query(sql.bajaUsuarios(), [id]);
+  if (usuario) {
+    res.status(200).json({ message: "se dió de baja los datos correctamente" });
+  }
+  res.end();
+};
+exports.activarUsuario = async (req, res) => {
+  const { id } = req.params;
+  const usuario = await pool.query(sql.activeUser(), [id]);
+  if (usuario) {
+    res.status(200).json({ message: "se activaron los datos correctamente" });
+  }
+  res.end();
 };
 exports.getOdInUse = async (req, res) => {
   const users = await pool.query(sql.getOdUsersInUse());
@@ -123,14 +146,11 @@ exports.eliminarPerUsuario = async (req, res) => {
 
 exports.actualizarUsuario = (req, res) => {
   const id = req.params.id;
-  const { usuario, contraseña, previlegios, active } = req.body;
-  const fecha_registro = new Date();
+  const { usuario, contraseña, previlegios } = req.body;
   const actualizarUsuario = {
     usuario,
     contraseña,
     previlegios,
-    fecha_registro,
-    active,
   };
   try {
     pool.query(sql.getUsuariosById(), [id], (err, result) => {

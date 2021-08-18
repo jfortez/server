@@ -34,6 +34,12 @@ exports.deleteUsuario = () => {
 exports.updateUsuario = () => {
   return `UPDATE  usuarios SET ? WHERE id=?`;
 };
+exports.bajaUsuarios = () => {
+  return "UPDATE usuarios SET active=0 WHERE usuarios.id=?";
+};
+exports.activeUser = () => {
+  return "UPDATE usuarios SET active=1 WHERE usuarios.id=?";
+};
 exports.setOdontologoUserToNull = () => {
   return "UPDATE  usuarios u, odontologos o SET id_Usuario=NULL WHERE u.id=o.id_Usuario AND u.id=?";
 };
