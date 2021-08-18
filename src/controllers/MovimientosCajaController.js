@@ -10,16 +10,25 @@ exports.listMovimientosCaja = async (req, res) => {
 };
 exports.addMovimientosCaja = async (req, res) => {
   const fechaMovimiento = new Date();
-  const { id_caja, ingreso, egreso, descripcion, id_Usuario, id_detalle, id_facturacion_servico } =
-    req.body;
+  const {
+    id_caja,
+    ingreso,
+    egreso,
+    descripcion,
+    caja_actual,
+    id_Usuario,
+    id_detalle_venta,
+    id_facturacion_servico,
+  } = req.body;
   const nuevo = {
     id_caja,
     ingreso,
     egreso,
     descripcion,
     fechaMovimiento,
+    caja_actual,
     id_Usuario,
-    id_detalle,
+    id_detalle_venta,
     id_facturacion_servico,
   };
   if (ingreso === undefined) {
@@ -28,7 +37,7 @@ exports.addMovimientosCaja = async (req, res) => {
   if (egreso === undefined) {
     delete nuevo.egreso;
   }
-  if (id_detalle === undefined) {
+  if (id_detalle_venta === undefined) {
     delete nuevo.id_detalle;
   }
   if (id_facturacion_servico === undefined) {
