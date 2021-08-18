@@ -88,44 +88,55 @@ exports.pruebaCrear = async (req, res) => {
     return res.status(400).json({ message: "los campos no pueden ser vacios" });
   }
   //prmero identificar si ya existe el numero de cedula de forma global en la tabla PERSONAS
-  const ifCedulaExists = await pool.query(sql.verificarEnTablaPersonas(), [cedula]);
-  if (ifCedulaExists.length > 0) {
-    res.json({ message: "cedula ya existe" });
-  } else {
-    //en caso de que no existe cedula de manera global, se procede a crear una fila a la tabla PERSONAL
-    const nuevoPersonal = {
-      id_Cargo,
-      fecha_registro,
-      active,
-      id_Usuario,
+  const cedulaExiste = await pool.query(sql.verify2(), [cedula]);
+  if (cedulaExiste.length > 0) {
+    return res.json({ message: "cedula ya existe", cedulaExiste });
+  }
+  const ifCiExists = await pool.query(sql.verificarEnTablaPersonas(), [cedula]);
+  if (ifCiExists.length > 0) {
+    return res.json({ message: "Dato ya existe" });
+  }
+  //en caso de que no existe cedula de manera global, se procede a crear una fila a la tabla PERSONAL
+  const nuevoPersonal = {
+    id_Cargo,
+    fecha_registro,
+    active,
+    id_Usuario,
+  };
+  const personal = await pool.query(sql.insertPersonal(), [nuevoPersonal]);
+  const id_Personal = personal.insertId; //esta variable mantiene la ultima ID de la fila creada de la tabla PERSONAL
+  //una vez creada, se debe almacenar los datos en la tabla PERSONAS para verificar en un futuro que no se repita
+  //verificamos que si ocurrió el proceso
+  if (personal) {
+    //procedemos a almacenar la informacion de forma global en tabla PERSONAS
+    const personasData = {
+      cedula,
+      nombres,
+      apellidos,
+      telefono,
+      direccion,
+      ciudad,
+      fecha_nacimiento,
+      email,
+      id_Personal,
     };
-    const personal = await pool.query(sql.insertPersonal(), [nuevoPersonal]);
-    const id_Personal = personal.insertId; //esta variable mantiene la ultima ID de la fila creada de la tabla PERSONAL
-    //una vez creada, se debe almacenar los datos en la tabla PERSONAS para verificar en un futuro que no se repita
-    //verificamos que si ocurrió el proceso
-    if (personal) {
-      //procedemos a almacenar la informacion de forma global en tabla PERSONAS
-      const personasData = {
-        cedula,
-        nombres,
-        apellidos,
-        telefono,
-        direccion,
-        ciudad,
-        fecha_nacimiento,
-        email,
-        id_Personal,
-      };
-      const personas = await pool.query(sql.almacenarDatos(), [personasData]);
-      if (personas) {
-        res.status(200).json({ message: "se ha creado correctamente" });
-      }
+    const personas = await pool.query(sql.almacenarDatos(), [personasData]);
+    if (personas) {
+      res.status(200).json({ message: "se ha creado correctamente" });
     }
   }
 };
-
+exports.bajaPersonal = async (req, res) => {
+  const { id } = req.params;
+  const baja = await pool.query(sql.bajaPersonal(), [id]);
+  if (baja) {
+    res.status(200).json({ message: "se dio de baja al perfil correctamente" });
+  }
+  res.end();
+};
 exports.pruebaActualizar = async (req, res) => {
   const { id } = req.params;
+  const active = 1;
   const {
     cedula,
     nombres,
@@ -136,7 +147,6 @@ exports.pruebaActualizar = async (req, res) => {
     fecha_nacimiento,
     email,
     id_Cargo,
-    active,
     id_Usuario,
   } = req.body;
   let updatePersonal = {
