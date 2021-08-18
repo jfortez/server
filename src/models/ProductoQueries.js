@@ -1,8 +1,11 @@
 exports.getProductos = () => {
-  return "select * from productos";
+  return "select * from productos where active=1";
 };
 exports.getProductos2 = () => {
   return "SELECT p.*, ctp.nombre AS categoria FROM productos p, categoria_producto ctp WHERE p.id_categoria=ctp.id";
+};
+exports.bajaProuctos = () => {
+  return "UPDATE productos SET active=0 WHERE productos.id=?";
 };
 exports.getProductoById = () => {
   return "SELECT * FROM productos WHERE id=?";

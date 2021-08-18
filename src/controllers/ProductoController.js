@@ -10,7 +10,14 @@ exports.listProducto = async (req, res) => {
   });
   res.send();
 };
-
+exports.bajaProveedor = async (req, res) => {
+  const { id } = req.params;
+  const producto = await pool.query(sql.bajaProuctos(), [id]);
+  if (producto) {
+    res.status(200).json({ message: "se dió de baja los datos correctamente" });
+  }
+  res.end();
+};
 exports.getProductoById = async (req, res) => {
   const { id } = req.params;
   await pool.query(sql.getProductoById(), [id], (err, response) => {
@@ -72,6 +79,10 @@ exports.crearProducto = async (req, res) => {
     id_categoria,
     active,
   };
+  const codExiste = await pool.query(sql.getProductoByCod(), [cod_producto]);
+  if (codExiste.length > 0) {
+    return res.json({ message: "el dato existe", codExiste });
+  }
   await pool.query(sql.insertProductos(), [nuevoProducto], (err, response) => {
     if (err) throw err;
     if (response) {
@@ -99,8 +110,8 @@ exports.eliminarProducto = async (req, res) => {
 
 exports.actualizarProducto = async (req, res) => {
   const { id } = req.params;
-  const { cod_producto, nombre, descripcion, cantidad, costo, precio, id_categoria, active } =
-    req.body;
+  const active = 1;
+  const { cod_producto, nombre, descripcion, cantidad, costo, precio, id_categoria } = req.body;
   let nuevoProducto = {
     cod_producto,
     nombre,

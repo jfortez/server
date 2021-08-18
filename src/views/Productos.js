@@ -8,6 +8,7 @@ const {
   listProducto,
   getProductoByCod,
   test,
+  bajaProveedor,
   updateByCompras,
   multipleCreate,
 } = require("../controllers/ProductoController");
@@ -18,6 +19,7 @@ router.post("/test", test);
 router.post("/actualizarByCompras", updateByCompras);
 router.post("/cod", getProductoByCod);
 router.post("/create", crearProducto);
+router.post("/baja/:id", bajaProveedor);
 router.post("/createmultiple", multipleCreate);
 router.delete("/delete/:id", eliminarProducto);
 router.post("/update/:id", actualizarProducto);
