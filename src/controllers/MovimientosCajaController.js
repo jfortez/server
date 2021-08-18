@@ -8,6 +8,14 @@ exports.listMovimientosCaja = async (req, res) => {
   }
   res.end();
 };
+exports.listMovimientosCajaByIdCaja = async (req, res) => {
+  const { id } = req.params;
+  const movimientos_caja = await pool.query(sql.getMovimientosCajaById(), [id]);
+  if (movimientos_caja.length > 0) {
+    res.status(200).json(movimientos_caja);
+  }
+  res.end();
+};
 exports.addMovimientosCaja = async (req, res) => {
   const fechaMovimiento = new Date();
   const {
@@ -17,8 +25,8 @@ exports.addMovimientosCaja = async (req, res) => {
     descripcion,
     caja_actual,
     id_Usuario,
-    id_detalle_venta,
-    id_facturacion_servico,
+    id_venta,
+    id_venta_servicio,
   } = req.body;
   const nuevo = {
     id_caja,
@@ -28,8 +36,8 @@ exports.addMovimientosCaja = async (req, res) => {
     fechaMovimiento,
     caja_actual,
     id_Usuario,
-    id_detalle_venta,
-    id_facturacion_servico,
+    id_venta,
+    id_venta_servicio,
   };
   if (ingreso === undefined) {
     delete nuevo.ingreso;
@@ -37,11 +45,11 @@ exports.addMovimientosCaja = async (req, res) => {
   if (egreso === undefined) {
     delete nuevo.egreso;
   }
-  if (id_detalle_venta === undefined) {
-    delete nuevo.id_detalle;
+  if (id_venta === undefined) {
+    delete nuevo.id_venta;
   }
-  if (id_facturacion_servico === undefined) {
-    delete nuevo.id_facturacion_servico;
+  if (id_venta_servicio === undefined) {
+    delete nuevo.id_venta_servicio;
   }
   const movimientos_caja = await pool.query(sql.createMovimientosCaja(), [nuevo]);
   if (movimientos_caja) {
