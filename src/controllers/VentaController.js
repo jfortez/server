@@ -5,7 +5,7 @@ exports.listVenta = async (req, res) => {
   await pool.query(sql.getVentas(), (err, response) => {
     if (err) throw err;
     if (response) {
-      res.status(200).json({ response });
+      res.status(200).json(response);
     }
   });
 };
@@ -15,7 +15,7 @@ exports.getVentaById = async (req, res) => {
   await pool.query(sql.getVentasById(), [id], (err, response) => {
     if (err) throw err;
     if (response.length > 0) {
-      res.status(200).json({ response });
+      res.status(200).json(response);
     } else {
       res.status(500).json({ message: "Venta no existe" });
     }
@@ -24,10 +24,20 @@ exports.getVentaById = async (req, res) => {
 
 exports.crearVenta = async (req, res) => {
   const fecha = new Date();
-  const { num_venta, cantidad, subtotal, total, importe, devolucion, id_Cliente, id_Usuario } =
-    req.body;
+  const {
+    num_venta,
+    num_recibo,
+    cantidad,
+    subtotal,
+    total,
+    importe,
+    devolucion,
+    id_Cliente,
+    id_Usuario,
+  } = req.body;
   const nuevaVenta = {
     num_venta,
+    num_recibo,
     fecha,
     cantidad,
     subtotal,
@@ -65,12 +75,20 @@ exports.eliminarVenta = async (req, res) => {
 
 exports.actualizarVenta = async (req, res) => {
   const { id } = req.params;
-  const fecha = new Date();
-  const { num_venta, cantidad, subtotal, total, importe, devolucion, id_Cliente, id_Usuario } =
-    req.body;
+  const {
+    num_venta,
+    num_recibo,
+    cantidad,
+    subtotal,
+    total,
+    importe,
+    devolucion,
+    id_Cliente,
+    id_Usuario,
+  } = req.body;
   const nuevaVenta = {
     num_venta,
-    fecha,
+    num_recibo,
     cantidad,
     subtotal,
     total,
