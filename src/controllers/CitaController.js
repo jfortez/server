@@ -17,12 +17,21 @@ exports.listCitaById = async (req, res) => {
 
   res.end();
 };
+exports.maxid = async (req, res) => {
+  const cita = await pool.query(sql.maxid());
+  if (cita.length > 0) {
+    res.status(200).json(cita);
+  }
+
+  res.end();
+};
 exports.createCita = async (req, res) => {
-  const { id_agenda, sintomas, id_receta, asistencia, observaciones } = req.body;
-  const nuevo = { id_agenda, sintomas, id_receta, asistencia, observaciones };
+  const { id_agenda, sintomas, asistencia, observaciones } = req.body;
+  const nuevo = { id_agenda, sintomas, asistencia, observaciones };
   const cita = await pool.query(sql.insertCita(), [nuevo]);
   if (cita) {
-    res.status(200).json({ message: "se ha ingresado los datos correctamente" });
+    const id = cita.insertId;
+    res.status(200).json(id);
   } else {
     res.status(400).json({ message: "hubo un error al ingresar los datos" });
   }
@@ -30,8 +39,8 @@ exports.createCita = async (req, res) => {
 };
 exports.updateCita = async (req, res) => {
   const { id } = req.params;
-  const { sintomas, id_receta, asistencia, observaciones } = req.body;
-  let update = { sintomas, id_receta, asistencia, observaciones };
+  const { sintomas, asistencia, observaciones } = req.body;
+  let update = { sintomas, asistencia, observaciones };
   if (observaciones === undefined) {
     delete update.observaciones;
   }

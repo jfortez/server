@@ -8,6 +8,7 @@ exports.listVenta = async (req, res) => {
       res.status(200).json(response);
     }
   });
+  res.end();
 };
 
 exports.getVentaById = async (req, res) => {

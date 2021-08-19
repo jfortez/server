@@ -10,3 +10,6 @@ exports.insertCita = () => {
 exports.updateCita = () => {
   return "UPDATE cita SET ? WHERE id_agenda=?";
 };
+exports.maxid = () => {
+  return "SELECT MAX(id) FROM cita";
+};

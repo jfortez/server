@@ -8,10 +8,18 @@ exports.listReceta = async (req, res) => {
   }
   res.end();
 };
+exports.listRecetaByIdAgenda = async (req, res) => {
+  const { id } = req.params;
+  const receta = await pool.query(sql.getReceta(), [id]);
+  if (receta) {
+    res.status(200).json(receta);
+  }
+  res.end();
+};
 exports.creatReceta = async (req, res) => {
   const active = 1;
-  const { nombre, descripcion } = req.body;
-  const nuevo = { nombre, descripcion, active };
+  const { id_agenda, nombre, descripcion } = req.body;
+  const nuevo = { id_agenda, nombre, descripcion, active };
   const receta = await pool.query(sql.insertReceta(), [nuevo]);
   if (receta) {
     res.status(200).json({ message: "se ha ingresado los datos correctamente" });
@@ -22,8 +30,8 @@ exports.creatReceta = async (req, res) => {
 };
 exports.updateReceta = async (req, res) => {
   const { id } = req.params;
-  const { nombre, descripcion } = req.body;
-  const update = { nombre, descripcion };
+  const { id_agenda, nombre, descripcion } = req.body;
+  const update = { id_agenda, nombre, descripcion };
   const receta = await pool.query(sql.updateReceta(), [update, id]);
   if (receta) {
     res.status(200).json({ message: "Receta Actualizada correctamente" });

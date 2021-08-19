@@ -1,6 +1,9 @@
 exports.getReceta = () => {
   return "SELECT * from receta";
 };
+exports.getReceta = () => {
+  return "SELECT * from receta where id_agenda=?";
+};
 exports.insertReceta = () => {
   return "INSERT INTO receta SET ?";
 };
