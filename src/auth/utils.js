@@ -15,7 +15,7 @@ function generateToken(user) {
     active: user.active,
   };
 
-  return jwt.sign(u, process.env.JWT_SECRET, {
+  return jwt.sign(u, process.env.JWT_SECRET || "ABCDEF$123", {
     expiresIn: 60 * 60 * 24, // expires in 24 hours
   });
 }

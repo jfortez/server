@@ -120,7 +120,7 @@ exports.middleware = (req, res, next) => {
   if (!token) return next(); //if no token, continue
 
   token = token.replace("Bearer ", "");
-  jwt.verify(token, process.env.JWT_SECRET, function (err, user) {
+  jwt.verify(token, process.env.JWT_SECRET || "ABCDEF$123", function (err, user) {
     if (err) {
       return res.status(401).json({
         error: true,

@@ -18,12 +18,13 @@ const { authorize, authorized, signin } = require("../auth/auth");
 
 // router.get("/", authorized);
 router.get("/", getUsuario);
+router.get("/verifyToken", authorize);
+router.get("/ini", authorized);
 router.get("/:id", getUsusuarioById);
 router.get("/pers", getPersInUse);
 router.get("/all", getAllUsersInUse);
 router.get("/od", getOdInUse);
 router.post("/signin", signin);
-router.get("/verifyToken", authorize);
 router.get("/user/:id", getUsuarioById);
 router.post("/create", crearUsuario);
 router.post("/baja/:id", bajaUsuarios);

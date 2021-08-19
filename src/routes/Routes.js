@@ -26,5 +26,6 @@ routes.use("/receta", require("../views/Receta"));
 routes.use("/servicios", require("../views/Servicios"));
 routes.use("/ventaservicios", require("../views/Venta_Servicio"));
 routes.use("/facturacionservicios", require("../views/Facturacion_Servicio"));
+routes.use("/permisomedico", require("../views/Permisos"));
 
 module.exports = routes;
