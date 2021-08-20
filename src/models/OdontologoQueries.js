@@ -14,7 +14,7 @@ exports.bajaOdontologowUser = () => {
   return "update personas, odontologos, usuarios SET odontologos.active=0, usuarios.active=0 where personas.id_Odontologo=odontologos.id AND odontologos.id_Usuario=usuarios.id AND odontologos.id=?";
 };
 exports.bajaOdontologo = () => {
-  return "update personas, odontologos  SET odontologos.active=0 where personas.id_Odontologo=odontologos.id AND odontologos.id=12";
+  return "update personas, odontologos  SET odontologos.active=0 where personas.id_Odontologo=odontologos.id AND odontologos.id=?";
 };
 exports.verify2 = () => {
   return "SELECT * FROM personas, odontologos WHERE personas.id_Odontologo=odontologos.id AND cedula=?";
