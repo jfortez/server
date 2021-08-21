@@ -11,6 +11,7 @@ const {
   getOdInUse,
   bajaUsuarios,
   activarUsuario,
+  login,
   getUsusuarioById,
   getAllUsersInUse,
 } = require("../controllers/UsuarioController");
@@ -25,6 +26,7 @@ router.get("/pers", getPersInUse);
 router.get("/all", getAllUsersInUse);
 router.get("/od", getOdInUse);
 router.post("/signin", signin);
+router.post("/verifyUser", login);
 router.get("/user/:id", getUsuarioById);
 router.post("/create", crearUsuario);
 router.post("/baja/:id", bajaUsuarios);

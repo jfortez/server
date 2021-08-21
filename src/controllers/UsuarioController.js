@@ -82,7 +82,7 @@ exports.login = (req, res) => {
       } else {
         if (result.length > 0) {
           if (result[0].usuario === usuario && result[0].contraseña === contraseña) {
-            res.json({ message: "username and password are Correct", result });
+            res.json(result);
           }
         } else {
           return res.json({
