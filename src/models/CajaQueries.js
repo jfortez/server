@@ -1,5 +1,5 @@
 exports.getCaja = () => {
-  return "SELECT * from caja";
+  return "SELECT caja.id AS id_caja, caja.fecha, caja.caja_inicio, caja.caja_actual, caja.caja_cierre, caja.estado_caja, caja.fecha_cierre, usuarios.usuario FROM caja, usuarios WHERE caja.id_Usuario=usuarios.id";
 };
 exports.getCajaByLastId = () => {
   return "SELECT * FROM caja ORDER BY id DESC LIMIT 1";
